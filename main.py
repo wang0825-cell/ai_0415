@@ -6,7 +6,7 @@ import streamlit as st
 from sklearn.datasets import load_iris
 
 
-st.set_page_config(page_title="Iris ??璅∪??葫", page_icon="?", layout="centered")
+st.set_page_config(page_title="Iris Classifier", page_icon="*", layout="centered")
 
 st.markdown(
     """
@@ -43,13 +43,13 @@ st.markdown(
 
 MODEL_FILES = {
     "KNN": "knn_model.joblib",
-    "蝢??航艘甇?: "logistic_model.joblib",
-    "擃鞎???: "naive_bayes_model.joblib",
+    "Logistic Regression": "logistic_model.joblib",
+    "Naive Bayes": "naive_bayes_model.joblib",
     "XGBoost": "xgb_model.joblib",
 }
 
-TARGET_NAMES = load_iris().target_names
 iris = load_iris()
+target_names = iris.target_names
 feature_names = iris.feature_names
 
 
@@ -63,21 +63,23 @@ def load_scaler():
     scaler_iris_path = Path("scaler_iris.joblib")
     if scaler_iris_path.exists():
         return joblib.load(scaler_iris_path), scaler_iris_path.name
+
     fallback = Path("scaler.joblib")
     if fallback.exists():
         return joblib.load(fallback), fallback.name
-    raise FileNotFoundError("?曆???scaler_iris.joblib ??scaler.joblib")
+
+    raise FileNotFoundError("Missing scaler_iris.joblib or scaler.joblib")
 
 
-st.title("Iris ??璅∪??葫 APP")
-st.caption("?豢?璅∪?銝西撓?亦敺萄潘?????蝡?葫 Iris ?車??)
+st.title("Iris Classifier App")
+st.caption("Choose a model and adjust flower measurements to predict the Iris species.")
 
 with st.container():
     st.markdown("<div class='main-card'>", unsafe_allow_html=True)
 
-    selected_model_name = st.selectbox("?豢???璅∪?", list(MODEL_FILES.keys()))
+    selected_model_name = st.selectbox("Choose a model", list(MODEL_FILES.keys()))
     st.markdown(
-        f"<span class='model-tag'>?桀?璅∪?嚗selected_model_name}</span>",
+        f"<span class='model-tag'>Current model: {selected_model_name}</span>",
         unsafe_allow_html=True,
     )
 
@@ -94,7 +96,7 @@ with st.container():
             )
         )
 
-    predict_btn = st.button("???葫", use_container_width=True, type="primary")
+    predict_btn = st.button("Predict", use_container_width=True, type="primary")
     st.markdown("</div>", unsafe_allow_html=True)
 
 if predict_btn:
@@ -107,19 +109,19 @@ if predict_btn:
         pred_idx = int(model.predict(scaled_input)[0])
 
         st.markdown("<div class='result-card'>", unsafe_allow_html=True)
-        st.subheader("?葫蝯?")
-        st.write(f"?葫?車嚗?*{TARGET_NAMES[pred_idx]}**")
-        st.write(f"雿輻璅??嚗{scaler_name}`")
+        st.subheader("Prediction Result")
+        st.write(f"Predicted species: **{target_names[pred_idx]}**")
+        st.write(f"Scaler used: `{scaler_name}`")
 
         if hasattr(model, "predict_proba"):
             probs = model.predict_proba(scaled_input)[0]
-            st.write("???交???")
-            for class_name, prob in zip(TARGET_NAMES, probs):
+            st.write("Class probabilities:")
+            for class_name, prob in zip(target_names, probs):
                 st.write(f"- {class_name}: {prob:.2%}")
 
-        st.caption("撌脣???皞?敺??脰?璅∪??葫??)
+        st.caption("This demo is for learning and model showcase purposes.")
         st.markdown("</div>", unsafe_allow_html=True)
     except FileNotFoundError as error:
         st.error(str(error))
     except Exception as error:
-        st.error(f"?葫憭望?嚗error}")
+        st.error(f"Prediction failed: {error}")
