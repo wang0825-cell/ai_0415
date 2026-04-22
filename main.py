@@ -13,6 +13,28 @@ st.markdown(
     <style>
     .stApp {
         background: linear-gradient(120deg, #f8fafc 0%, #e0f2fe 100%);
+        color: #16324f;
+    }
+    h1, h2, h3 {
+        color: #12324a !important;
+    }
+    p, label, .stMarkdown, .stCaption {
+        color: #294861 !important;
+    }
+    .stSelectbox label,
+    .stSlider label,
+    .stNumberInput label,
+    .stTextInput label,
+    .stTextArea label {
+        color: #21425d !important;
+        font-weight: 600;
+    }
+    .stSelectbox div[data-baseweb="select"] > div {
+        color: #16324f;
+    }
+    .stSlider [data-testid="stTickBar"],
+    .stSlider [data-testid="stThumbValue"] {
+        color: #d62839;
     }
     .main-card {
         background: #ffffff;
@@ -35,6 +57,9 @@ st.markdown(
         color: #0f766e;
         font-weight: 600;
         margin-bottom: 0.8rem;
+    }
+    .stCaptionContainer, .stCaptionContainer p {
+        color: #3a556d !important;
     }
     </style>
     """,
